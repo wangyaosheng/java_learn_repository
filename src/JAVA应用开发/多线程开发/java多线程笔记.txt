@@ -1,0 +1,100 @@
+/**
+ * This file contains notes on multi-threaded development in Java.
+ * 
+ * The notes cover various aspects of processes and threads in Java,
+ * providing insights and examples to help understand and implement
+ * multi-threading in Java applications.
+ * 
+ * Key topics include:
+ * - Processes (进程)
+ * - Threads (线程)
+ * - Synchronization (同步)
+ * - Concurrency (并发)
+ * - Thread safety (线程安全)
+ * 
+ * The content is written in Chinese and is intended for developers
+ * who are familiar with Java and want to deepen their understanding
+ * of multi-threading concepts and practices.
+ */
+- 进程（Process）：操作系统中能运行的多个应用程序。
+- 线程（Thread）：应用程序中能够同时运行多个任务。Java虚拟机允许一个应用程序同时运行多个线程。
+
+每个线程都有一个优先级，优先级较高的线程优先执行。线程也可以被标记为守护线程。新创建的线程继承创建线程的优先级和守护状态。
+
+当Java虚拟机启动时，通常有一个非守护线程（通常调用某个指定类的main方法）。Java虚拟机继续执行线程，直到发生以下任一情况：
+1. Runtime类的exit方法被调用，并且安全管理器允许退出操作发生。
+2. 所有非守护线程都已终止，要么从run方法返回，要么抛出一个未捕获的异常。
+
+### 通过继承Thread类创建线程
+```java
+class PrimeThread extends Thread {
+    long minPrime;
+    PrimeThread(long minPrime) {
+        this.minPrime = minPrime;
+    }
+
+    public void run() {
+        // compute primes larger than minPrime
+        ...
+    }
+}
+
+// 创建并启动线程
+PrimeThread p = new PrimeThread(143);
+p.start();
+----------------------------------------------------------------------------
+- 默认情况下，程序只能“顺序地”完成任务
+  - 属于 java.lang，不用导入
+
+### 创建线程的三种方式
+1. 继承 Thread 类
+2. 重写 run 方法
+3. 使用 ExecutorService（需要调用 start() 方法）
+
+- Thread 是 Runnable 的实现类（接口中的方法都是抽象方法）
+
+### 实现 Runnable 接口
+1. 实现 Runnable 接口
+2. 重写 run 方法
+
+### 二者区别
+当你实现 Runnable 接口时，可以创建一个 Runnable 实例，并将其传递给多个线程。这意味着多个线程可以共享同一个 Runnable 实例，从而共享该实例中的资源。
+
+#### 示例
+```java
+class SharedResource implements Runnable {
+    private int counter = 0;
+
+    @Override
+    public void run() {
+        for (int i = 0; i < 5; i++) {
+            increment();
+            System.out.println(Thread.currentThread().getName() + ": " + counter);
+        }
+    }
+
+    private synchronized void increment() {
+        counter++;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        SharedResource sharedResource = new SharedResource();
+        Thread thread1 = new Thread(sharedResource);
+        Thread thread2 = new Thread(sharedResource);
+
+        thread1.start();
+        thread2.start();
+    }
+}
+-------------------------------------------------------------------
+-线程控制：怎样控制线程的暂停，同步
+ -传统方法：suspand:暂停，resume:恢复
+  -不安全！！！不能使用
+-永远不让run函数冻结，要么执行完，要么不执行，暂停用run件数运行完毕代替
+-继续用重新开始run函数代替
+-但是继续之前要保存现场
+
+-线程同步：
+-两个线程，向同一个数组arr[4]中寻访数据，要求按照顺序存放，分别为1,2,3,4
