@@ -72,8 +72,26 @@
 
 ## 渲染：颜色，字体，图标
 
-### 颜色
+### 颜色:java.awt.color
+* 设置背景颜色：setBackground
+* 设置前景颜色: setFrontground
 
-### 字体
+### 字体:java.awt.font
+* 设置字体：setFont
 
-### 图标
+### 图标：java.
+* 某些控件在构造函数中支持设置图标，具体见文档
+ * Button
+ * eg.
+ * 
+ ``` JAVA
+   private ImageIcon icon1 = new ImageIcon(getClass().getResource("/JAVA应用开发/图形用户界面开发/image.jpg"));
+   private JButton button = new JButton("新生注册", icon1);
+ 
+```
+ ## 布局
+ * 如何自己控制控件在界面上的位置
+  * 默认控件位置是从上到下，从左到右，放不下另起一行：流布局
+  * 如何自己布局：
+   * 将界面布局设置为布局
+   * 用setSize设置控件大小,setLocation设置位置
