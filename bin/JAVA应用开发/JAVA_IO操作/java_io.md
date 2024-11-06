@@ -228,4 +228,4 @@ public class java_io {
   System.out 是 printstream类的对象
 
 ## 可以任意从文件的某个位置开始读写的类： java.io.RandomAccessFile类
-  *seek 方法是 RandomAccessFile 类中的一个重要方法，用于将文件指针移动到文件中的指定位置。文件指针决定了下一次读写操作将发生的位置。
+  *seek 方法是 RandomAccessFile 类中的一个重要方法，用于将文件指针移动到文件中的指定位置。文件指针决定了下一次读写操作将发生的位置。*

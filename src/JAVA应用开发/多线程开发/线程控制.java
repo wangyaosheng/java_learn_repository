@@ -26,14 +26,10 @@ public class 线程控制 {
      */
     /* 解决： */
     Thread.sleep(1000);
-    d.run=false;
+    d.interrupt();
     Thread.sleep(1000);
-    d.run = true;
-    d.start();
-    /* 错误：d已结束，无法再start,只能重新new */
-    Download d1 =new Download();
+    Download d1 = new Download();
     d1.start();
-    /* 这里必须保存现场，否则不会从上次结束点开始运行 */
   }
 }
 
@@ -41,11 +37,14 @@ class Download extends Thread {
   boolean run=true;
   static int i=1;
   public void run() {
-    for (; i < 10&&run; i++) {
+    for (; i < 10 && run; i++) {
       try {
         Thread.sleep(1000);
       } catch (InterruptedException e) {
-
+        if (Thread.interrupted()) {
+          System.out.println("Thread was interrupted, stopping...");
+          break;
+        }
         e.printStackTrace();
       }
       System.out.println("下载音乐" + i);
